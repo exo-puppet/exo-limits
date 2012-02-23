@@ -7,7 +7,7 @@ class limits::config {
         /(Ubuntu|Debian)/: {
            augeas { "pam_set_su_limits":
                context => "/files/etc/pam.d/su",
-               changes => [ "ins 1000 after *[type='session'][module='pam_mail.so']",
+               changes => [ "ins 1000 after #comment[. =~ regexp(\".*pam_limits.so.*\")]",
                             "set 1000/type session",
                             "set 1000/control required",
                             "set 1000/module pam_limits.so" ],
