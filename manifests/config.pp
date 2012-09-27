@@ -12,7 +12,7 @@ class limits::config {
                             "set 1000/control required",
                             "set 1000/module pam_limits.so" ],
                onlyif  => "match *[type='session'][control='required'][module='pam_limits.so'] size == 0",
-           }    
+           }
         }
         default: {
             fail ("The ${module_name} module is not supported on $::operatingsystem")

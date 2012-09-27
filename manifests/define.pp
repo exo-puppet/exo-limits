@@ -9,7 +9,7 @@
 # == Parameters
 #
 # [+domain+]
-#   
+#
 #   ¥ a username
 #   ¥ a groupname, with @group syntax. This should not be confused with netgroups.
 #   ¥ the wildcard *, for default entry.
@@ -19,14 +19,14 @@
 #   ¥ a gid specified as %:<gid> applicable to maxlogins limit only. It limits the total number of logins of all users that are member of the group with the specified gid.
 #
 # [+type+]
-#   
+#
 #   hard : for enforcing hard resource limits. These limits are set by the superuser and enforced by the Kernel. The user cannot raise his requirement of system resources above such values.
 #   soft : for enforcing soft resource limits. These limits are ones that the user can move up or down within the permitted range by any pre-existing hard limits. The values specified with this token can be thought of as default values, for normal system usage.
 #   -    : for enforcing both soft and hard resource limits together.
 #   Note, if you specify a type of '-' but neglect to supply the item and value fields then the module will never enforce any limits on the specified user/group etc. .
 #
 # [+item+]
-#   
+#
 #  core         : limits the core file size (KB)
 #  data         : maximum data size (KB)
 #  fsize        : maximum filesize (KB)
@@ -47,7 +47,7 @@
 #  rtprio       : maximum realtime priority allowed for non-privileged processes (Linux 2.6.12 and higher)
 #
 # [+value+]
-#   
+#
 #   All items support the values -1, unlimited or infinity indicating no limit, except for priority and nice.
 #
 #
@@ -65,29 +65,29 @@
 #        domain => "nexus",
 #        type => "soft",
 #        item => "nofile",
-#        value => "32768",        
+#        value => "32768",
 #    }
 #
 ################################################################################
 define limits::define ($domain, $type, $item, $value) {
     include limits::params, limits::config
-    
+
     # guid of this entry
     $key = "$domain/$type/$item"
-    
+
     $context = "/files${limits::params::configuration_file}"
-    
+
     $path_list  = "domain[.=\"$domain\"][./type=\"$type\" and ./item=\"$item\"]"
     $path_exact = "domain[.=\"$domain\"][./type=\"$type\" and ./item=\"$item\" and ./value=\"$value\"]"
-    
+
     # TODO add duplicate entry cleanup
-    
+
     augeas { "limits_conf/$key":
         context => "$context",
         onlyif  => "match $path_exact size==0",
         changes => [
             # remove all matching to the $domain, $type, $item, for any $value
-            "rm $path_list", 
+            "rm $path_list",
             # insert new node at the end of tree
             "set domain[last()+1] $domain",
             # assign values to the new node
