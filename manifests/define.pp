@@ -95,6 +95,6 @@ define limits::define ($domain, $type, $item, $value) {
             "set domain[last()]/item $item",
             "set domain[last()]/value $value",
         ],
-        require => Class["limits::config"],
+        require => [Class["limits::config"], Package ["augeas-tools"]],
     }
 }
